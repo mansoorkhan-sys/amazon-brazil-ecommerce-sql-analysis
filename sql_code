@@ -1,0 +1,236 @@
+select * from customers;
+select * from geolocation ;
+select * from leads_closed;
+select * from leads_qualified;
+select * from order_items;
+select * from order_payments;
+select * from order_reviews;
+select * from orders;
+select * from product_category_name_translation;
+select * from products;
+select * from sellers;
+
+-- Amazon project
+
+-- 1. Find the total number of orders fulfilled by each seller state.
+create temporary table delivered_order
+(SELECT 
+    oi.order_id, oi.seller_id, o.order_status
+FROM
+    order_items oi
+        JOIN
+    orders o USING (order_id)
+WHERE
+    o.order_status = 'delivered');
+SELECT 
+    *
+FROM
+    delivered_order;
+SELECT 
+    s.seller_state, COUNT(d.order_id) fulfilled_orders
+FROM
+    sellers s
+        JOIN
+    delivered_order d USING (seller_id)
+GROUP BY s.seller_state;
+
+-- 2. For each product category, calculate the cumulative revenue generated as orders come in over time
+create temporary table  payments
+select oi.product_id,oi.price,o.order_purchase_timestamp from order_items oi join orders o using(order_id);
+SELECT
+    COALESCE(po.product_category_name, 'Unknown') AS category,
+    p.price,
+    p.order_purchase_timestamp,
+    round(sum(p.price) OVER(
+        PARTITION BY po.product_category_name
+        ORDER BY p.order_purchase_timestamp
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ),2 )AS cumulative_revenue
+FROM payments p
+JOIN products po USING(product_id)
+ORDER BY category, p.order_purchase_timestamp;
+
+-- 3. Which payment method do customers use the most, and what is the average order value for each payment type?
+    
+SELECT 
+    COALESCE(op.payment_type, 'unknown') payment_type,
+    COUNT(oi.order_id) total_orders,
+    ROUND(AVG(oi.price)) avg_value
+FROM
+    order_payments op
+        RIGHT JOIN
+    order_items oi USING (order_id)
+GROUP BY payment_type;
+ 
+ 
+ -- 4. Find the customer who has spent the most money across all their orders.
+ 
+create temporary table custom_id
+SELECT 
+    c.customer_unique_id, o.order_id
+FROM
+    customers c
+        JOIN
+    orders o USING (customer_id);
+SELECT 
+	ci.customer_unique_id,
+    COUNT(oi.order_id) total_orders,
+    SUM(oi.price) total_money
+   
+FROM
+    order_items oi
+        JOIN
+    custom_id ci USING (order_id)
+GROUP BY (ci.customer_unique_id)
+ORDER BY (total_money) DESC;
+
+-- 5.  Find the average review score for each product category.
+create temporary table prod_name
+select oi.order_id,p.product_category_name from order_items oi join products p using(product_id);
+SELECT 
+    COALESCE(pn.product_category_name, 'Unknown') AS category,
+    AVG(r.review_score) avg_review_score
+FROM
+    prod_name pn
+        JOIN
+    order_reviews r USING (order_id)
+GROUP BY (pn.product_category_name);
+
+
+--  6. Find the total number of orders placed by each customer, broken down by the state they live in.
+create temporary table custom_orders
+SELECT 
+    c.customer_unique_id, o.order_id, c.customer_state
+FROM
+    customers c
+        JOIN
+    orders o USING (customer_id);
+SELECT 
+    *
+FROM
+    custom_orders;
+SELECT
+    customer_unique_id,
+    customer_state,
+    COUNT(DISTINCT order_id) AS total_orders
+FROM custom_orders
+GROUP BY
+    customer_unique_id,
+    customer_state
+ORDER BY
+    customer_state,
+    total_orders DESC;
+    
+-- 7. Identify sellers who registered on the platform but have never fulfilled a single order.
+select * from orders;
+SELECT
+    s.seller_id
+FROM sellers s
+ JOIN order_items oi
+    ON s.seller_id = oi.seller_id
+WHERE oi.order_id is null;
+
+
+--  8 Find the top 5 product categories by total revenue
+SELECT 
+    COALESCE(p.product_category_name, 'Unknown') AS category,
+    ROUND(SUM(oi.price), 2) total_revenue
+FROM
+    products p
+        JOIN
+    order_items oi USING (product_id)
+GROUP BY (category)
+ORDER BY total_revenue DESC
+LIMIT 5;
+
+
+-- 9. Find the median delivery time (in days) between order placement and actual delivery. 
+WITH cte AS (
+    SELECT
+        order_id,
+        TIMESTAMPDIFF(
+            DAY,
+            order_purchase_timestamp,
+            order_delivered_customer_date
+        ) AS delivery_days
+    FROM orders
+    WHERE order_status = 'delivered'
+      AND order_delivered_customer_date IS NOT NULL
+),
+cte2 AS (
+    SELECT
+        order_id,
+        delivery_days,
+        ROW_NUMBER() OVER(
+            ORDER BY delivery_days
+        ) AS rn,
+        COUNT(*) OVER() AS total_orders
+    FROM cte
+)
+SELECT
+    AVG(delivery_days) AS median_delivery_days
+FROM cte2
+WHERE rn IN (
+    FLOOR((total_orders + 1) / 2),
+    FLOOR((total_orders + 2) / 2)
+);
+    
+-- 10. Find all products that have never been ordered
+SELECT
+    p.product_id
+FROM products p
+  left JOIN order_items oi
+    using(product_id)
+WHERE oi.order_id is null;
+
+
+-- 11. Find sellers who have fulfilled more orders than the average seller on the platform. 
+SELECT DISTINCT
+    (seller_id), COUNT(order_id) AS total_orders
+FROM
+    order_items
+GROUP BY seller_id
+HAVING COUNT(order_id) > (SELECT 
+        ROUND(AVG(total_ord), 2) avg_order_value
+    FROM
+        (SELECT DISTINCT
+            (seller_id), COUNT(order_id) total_ord
+        FROM
+            order_items
+        GROUP BY seller_id) AS agg_tabl);
+
+--12. Find which Brazilian states have the highest average customer review score for orders delivered there
+create temporary table customs_state
+select o.order_id, c.customer_state from orders o join customers c using(customer_id);
+SELECT 
+    cs.customer_state, AVG(r.review_score) avg_score
+FROM
+    customs_state cs
+        JOIN
+    order_reviews r USING (order_Id)
+GROUP BY cs.customer_state
+ORDER BY avg_score DESC;
+
+
+-- 13. Identify customers who have placed orders but never left a review. 
+create temporary table null_review
+ select o.order_id, c.customer_unique_id from orders o join customers c using(customer_id);
+SELECT 
+    nr.customer_unique_id
+FROM
+    null_review nr
+        LEFT JOIN
+    order_reviews r USING (order_id)
+WHERE
+    r.review_comment_message IS NULL;
+    
+    
+-- 14.Find the month with the highest number of orders placed across the entire platform.
+SELECT 
+    MONTHNAME(order_purchase_timestamp) months,
+    COUNT(order_id) total_orders
+FROM
+    orders
+GROUP BY months
+ORDER BY total_orders DESC;
+ 
