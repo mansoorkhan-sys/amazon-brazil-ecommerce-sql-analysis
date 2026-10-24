@@ -94,33 +94,27 @@ FROM
     prod_name pn
         JOIN
     order_reviews r USING (order_id)
-GROUP BY (pn.product_category_name);
+GROUP BY (pn.product_category_name)
+ORDER BY (avg_review_score);
 
 
 --  6. Find the total number of orders placed by each customer, broken down by the state they live in.
-create temporary table custom_orders
+create temporary table custom_state
 SELECT 
-    c.customer_unique_id, o.order_id, c.customer_state
+    o.order_id, c.customer_state
 FROM
-    customers c
+    orders o
         JOIN
-    orders o USING (customer_id);
+    customers c USING (customer_id);
 SELECT 
-    *
+    cs.customer_state, (COUNT(oi.order_id)) total_order
 FROM
-    custom_orders;
-SELECT
-    customer_unique_id,
-    customer_state,
-    COUNT(DISTINCT order_id) AS total_orders
-FROM custom_orders
-GROUP BY
-    customer_unique_id,
-    customer_state
-ORDER BY
-    customer_state,
-    total_orders DESC;
-    
+    custom_state cs
+        JOIN
+    order_items oi USING (order_id)
+GROUP BY cs.customer_state
+ORDER BY total_order;
+
 -- 7. Identify sellers who registered on the platform but have never fulfilled a single order.
 select * from orders;
 SELECT
