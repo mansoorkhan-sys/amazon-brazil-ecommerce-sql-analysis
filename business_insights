@@ -1,0 +1,587 @@
+# 📊 Business Insights & Strategic Recommendations
+## Amazon Brazil E-Commerce Analytics | MySQL Project
+
+### Project Overview
+
+This project analyzes Brazilian e-commerce transactional data to uncover insights into seller performance, customer purchasing behavior, product revenue, payment preferences, delivery efficiency, and customer satisfaction.
+
+Using MySQL, 14 business questions were analyzed to support decision-making across logistics, marketing, finance, merchandising, customer relationship management, and marketplace operations.
+
+The primary objective was to transform transactional data into actionable business intelligence.
+
+---
+
+# 1. Executive Summary
+
+The analysis identified several important patterns in marketplace operations.
+
+| Business Area | Key Finding | Business Significance |
+|---|---|---|
+| Seller Performance | São Paulo recorded 78,604 seller-side order-item observations associated with delivered orders | Seller fulfillment activity is highly concentrated in São Paulo |
+| Revenue Performance | Beauty & Health generated R$1,258,681.34 | Highest-revenue product category |
+| Payment Preferences | Credit cards recorded 86,769 joined order-item/payment observations | Credit cards dominate the analyzed payment activity |
+| Customer Value | The highest-spending customer generated R$13,440 | Opportunity for high-value customer retention |
+| Regional Demand | São Paulo recorded 41,749 order-item observations | Strong concentration of customer purchasing activity |
+| Seller Activation | Zero inactive sellers were identified in the user's follow-up verification | No sellers met the tested inactivity criteria |
+| Delivery Performance | Median delivery duration was 10 days | Baseline for logistics performance |
+| Product Catalogue | Zero never-ordered products were identified | All recorded products appeared in at least one order |
+| Customer Satisfaction | Average state review scores ranged from approximately 3.61 to 4.19 | Customer experience varies geographically |
+| Review Engagement | 716 customers had purchased but never submitted a recorded review | Identifiable audience for review engagement campaigns |
+| Demand Patterns | August recorded 10,843 orders in the month-level aggregation | Potentially important period for demand planning |
+
+### Overall Business Interpretation
+
+The results suggest that the marketplace has a geographically concentrated seller network, strong credit card usage, several commercially significant product categories, and opportunities to improve customer engagement and logistics performance.
+
+The findings can support business planning, although some metrics require additional segmentation before operational decisions are made.
+
+---
+
+# 2. Seller Performance & Fulfillment Operations
+
+## Q1. Regional Seller Fulfillment Performance
+
+### Key Findings
+
+| Seller State | Recorded Fulfillment Activity |
+|---|---:|
+| São Paulo (SP) | 78,604 |
+| Minas Gerais (MG) | 8,603 |
+| Paraná (PR) | 8,487 |
+| Rio de Janeiro (RJ) | 4,685 |
+| Santa Catarina (SC) | 4,000 |
+
+### Business Insight
+
+São Paulo dominates seller-side fulfillment activity.
+
+The substantial difference between São Paulo and other states indicates a high concentration of marketplace supply-side operations.
+
+This may reflect a large seller base, higher seller transaction activity, or both.
+
+### Strategic Recommendations
+
+- Assess warehouse capacity and transportation infrastructure in São Paulo.
+- Evaluate whether logistics partnerships in Minas Gerais and Paraná could support more balanced regional distribution.
+- Compare seller locations with customer delivery destinations to identify potential shipping inefficiencies.
+- Monitor delivery delays and transportation costs across high-volume seller states.
+
+**Expected Business Impact:** More informed regional fulfillment planning and potential improvements in logistics efficiency.
+
+---
+
+## Q7. Sellers Who Have Never Fulfilled an Order
+
+### Key Finding
+
+**0 sellers identified.**
+
+The follow-up analysis using `LEFT JOIN` and `NOT EXISTS` returned no sellers meeting the tested inactivity criteria.
+
+### Business Insight
+
+The result suggests that all registered sellers represented in the dataset have fulfilled at least one order, provided the verification included delivered-order status.
+
+This is a positive historical seller-activation finding.
+
+However, historical fulfillment does not necessarily indicate that sellers remain active.
+
+### Strategic Recommendations
+
+- Track sellers who have not fulfilled orders in the last 30, 60, or 90 days.
+- Identify sellers with declining order volumes.
+- Develop re-engagement campaigns for sellers showing signs of inactivity.
+- Monitor seller retention using recent transaction activity rather than lifetime activity alone.
+
+**Expected Business Impact:** Improved seller retention monitoring and earlier identification of declining seller participation.
+
+---
+
+## Q11. Sellers Performing Above the Platform Average
+
+### Key Finding
+
+The SQL analysis identifies sellers whose recorded order activity exceeds the average across sellers.
+
+The supplied SQL file does not contain the numerical average or the number of qualifying sellers.
+
+### Business Insight
+
+Above-average seller performance provides a useful starting point for identifying sellers who contribute more transaction activity than their peers.
+
+However, order volume alone does not establish seller quality.
+
+High-volume sellers may still experience poor delivery performance, cancellations, or negative customer reviews.
+
+### Strategic Recommendations
+
+- Use above-average delivered-order volume as an initial seller segmentation criterion.
+- Combine seller order volume with customer review scores and delivery reliability.
+- Identify consistently high-performing sellers for recognition programs.
+- Investigate operational practices used by successful sellers.
+
+**Expected Business Impact:** Better seller segmentation and a more balanced foundation for seller recognition programs.
+
+---
+
+# 3. Revenue & Product Performance
+
+## Q2. Cumulative Revenue by Product Category
+
+### Key Finding
+
+The analysis calculates cumulative product revenue over time using SQL window functions.
+
+The supplied SQL file contains the calculation, but not the numerical output needed to identify specific category growth patterns.
+
+### Business Insight
+
+Cumulative revenue provides visibility into how category sales build over time.
+
+This analysis can help distinguish categories with consistent revenue accumulation from those experiencing concentrated periods of demand.
+
+It also creates a foundation for comparing actual revenue performance against business targets.
+
+### Strategic Recommendations
+
+- Compare cumulative revenue against monthly category targets.
+- Identify categories that reach sales targets early or late in a reporting period.
+- Investigate revenue spikes alongside promotional activity.
+- Use category-level revenue trends to support inventory planning.
+
+**Expected Business Impact:** Improved revenue monitoring and more informed promotional scheduling.
+
+---
+
+## Q8. Top Five Product Categories by Revenue
+
+### Key Findings
+
+| Rank | Product Category | Total Revenue |
+|---|---|---:|
+| 1 | Beauty & Health | R$1,258,681.34 |
+| 2 | Watches & Gifts | R$1,205,005.68 |
+| 3 | Bed, Bath & Table | R$1,036,988.68 |
+| 4 | Sports & Leisure | R$988,048.97 |
+| 5 | Computers & Accessories | R$911,954.32 |
+
+### Business Insight
+
+Beauty & Health generates the highest recorded product revenue, followed closely by Watches & Gifts.
+
+The leading categories represent important areas for merchandising and inventory analysis.
+
+However, high revenue does not necessarily indicate high profitability.
+
+### Strategic Recommendations
+
+- Prioritize leading revenue categories for further promotional evaluation.
+- Monitor stock availability for consistently high-demand products.
+- Compare category revenue with margins, returns, and customer satisfaction.
+- Investigate cross-selling opportunities between related product categories.
+- Identify emerging categories with strong growth potential.
+
+**Expected Business Impact:** Better allocation of merchandising resources and more informed category investment decisions.
+
+---
+
+## Q10. Products That Have Never Been Ordered
+
+### Key Finding
+
+**0 products identified.**
+
+Every product represented in the analyzed catalogue has at least one recorded order.
+
+### Business Insight
+
+The dataset contains no products without historical order activity.
+
+This indicates that all products represented in the catalogue have appeared in transactions.
+
+However, products with only one or two historical orders may still have weak commercial performance.
+
+### Strategic Recommendations
+
+- Identify products with low order frequency.
+- Analyze revenue generated per product.
+- Track time since each product's most recent order.
+- Investigate slow-moving products for repricing or promotional opportunities.
+
+**Expected Business Impact:** Improved catalogue performance monitoring and more efficient merchandising decisions.
+
+---
+
+# 4. Customer Behavior & Retention
+
+## Q4. Highest-Spending Customer
+
+### Key Findings
+
+| Metric | Result |
+|---|---:|
+| Highest Customer Spending | R$13,440 |
+| Recorded Order-Item Count | 8 |
+
+### Business Insight
+
+The analysis identifies a customer with substantial cumulative product spending.
+
+Such customers may be valuable candidates for personalized retention and loyalty initiatives.
+
+However, the spending metric is based on product prices, and the recorded count should not automatically be interpreted as eight distinct orders.
+
+### Strategic Recommendations
+
+- Segment customers according to total spending.
+- Apply Recency, Frequency, and Monetary (RFM) analysis.
+- Develop personalized retention campaigns for high-value customers.
+- Analyze purchasing categories and repeat-purchase behavior.
+
+**Expected Business Impact:** Better identification and retention of commercially valuable customers.
+
+---
+
+## Q6. Customer Purchasing Activity by State
+
+### Key Findings
+
+| Customer State | Recorded Order-Item Activity |
+|---|---:|
+| São Paulo (SP) | 41,749 |
+| Rio de Janeiro (RJ) | 12,579 |
+| Minas Gerais (MG) | 11,329 |
+| Rio Grande do Sul (RS) | 5,349 |
+| Paraná (PR) | 5,045 |
+
+### Business Insight
+
+São Paulo generates the highest recorded customer purchasing activity.
+
+Rio de Janeiro and Minas Gerais are also significant demand regions.
+
+These results demonstrate geographical concentration in customer-side transaction activity.
+
+However, the state-level totals do not independently establish which states have the highest number of orders per unique customer.
+
+### Strategic Recommendations
+
+- Evaluate customer retention opportunities in high-volume states.
+- Calculate order frequency per unique customer.
+- Identify states with high customer counts but low repeat-purchase rates.
+- Design geographically targeted marketing campaigns.
+- Compare regional demand with seller distribution and logistics capacity.
+
+**Expected Business Impact:** More effective regional customer segmentation and marketing resource allocation.
+
+---
+
+## Q13. Customers Who Have Never Submitted a Review
+
+### Key Finding
+
+**716 unique customers** were identified who placed at least one order but had no recorded reviews across their purchase history.
+
+### Business Insight
+
+These 716 customers represent a specific audience for post-purchase engagement campaigns.
+
+Their absence of review activity creates an opportunity to increase customer feedback participation.
+
+However, customers who do not submit reviews are not necessarily dissatisfied.
+
+### Strategic Recommendations
+
+- Send targeted review reminders after successful delivery.
+- Prioritize repeat purchasers who have never submitted feedback.
+- Measure the proportion of purchasing customers who have never reviewed.
+- Track review participation before and after engagement campaigns.
+- Avoid excessive reminders that could negatively affect customer experience.
+
+**Expected Business Impact:** Increased customer feedback participation and improved review coverage.
+
+---
+
+# 5. Payment Performance
+
+## Q3. Payment Method Preferences
+
+### Key Findings
+
+| Payment Method | Recorded Count | Average Value |
+|---|---:|---:|
+| Credit Card | 86,769 | R$126 |
+| Boleto | 22,867 | R$105 |
+| Voucher | 6,274 | R$105 |
+| Debit Card | 1,691 | R$109 |
+| Unknown | 3 | R$45 |
+
+### Business Insight
+
+Credit cards dominate payment activity in the joined transaction data.
+
+They also have the highest average product-item price among the major payment methods in the supplied calculation.
+
+Boleto is the second-largest category by recorded count, indicating the importance of supporting alternative payment options.
+
+The small unknown category suggests an opportunity to investigate payment classification quality.
+
+### Strategic Recommendations
+
+- Prioritize credit card processing reliability.
+- Evaluate payment provider fees and transaction costs.
+- Maintain alternative payment options for customers.
+- Investigate whether payment preferences differ across customer segments.
+- Improve the classification of unknown payment records.
+
+**Expected Business Impact:** More informed payment partnership negotiations and improved payment reporting.
+
+---
+
+# 6. Customer Satisfaction & Delivery Experience
+
+## Q5. Average Review Score by Product Category
+
+### Key Findings
+
+The analysis reveals differences in average review scores across product categories.
+
+Selected results include:
+
+| Product Category | Average Review Score |
+|---|---:|
+| `cool_stuff` | Approximately 4.15 |
+| `eletroportateis` | Approximately 4.15 |
+| `instrumentos_musicais` | Approximately 4.15 |
+| `brinquedos` | Approximately 4.16 |
+| `seguros_e_servicos` | 2.50 |
+
+### Business Insight
+
+Customer satisfaction varies across product categories.
+
+Insurance & Services records a relatively low average review score in the displayed results.
+
+This may indicate an area requiring further investigation, although the result should be interpreted alongside the number of reviews.
+
+Potential causes could include product expectations, service quality, or fulfillment issues.
+
+The available results do not establish the cause.
+
+### Strategic Recommendations
+
+- Investigate low-rated product categories.
+- Include review counts when evaluating category satisfaction.
+- Analyze negative customer feedback for recurring issues.
+- Compare product ratings with delivery performance and return rates.
+- Monitor category satisfaction trends over time.
+
+**Expected Business Impact:** Better prioritization of product and service quality investigations.
+
+---
+
+## Q9. Median Delivery Time
+
+### Key Finding
+
+**Median delivery duration: 10 days.**
+
+### Business Insight
+
+The median provides a useful measure of typical delivery duration.
+
+Because the median is less sensitive to extreme values than the mean, it is suitable for evaluating the middle of the delivery-time distribution.
+
+The 10-day result establishes a baseline for further logistics analysis.
+
+However, it does not independently establish whether delivery performance meets customer expectations.
+
+### Strategic Recommendations
+
+- Compare median delivery times across states.
+- Identify sellers associated with long delivery durations.
+- Measure differences between estimated and actual delivery dates.
+- Monitor the percentage of orders delivered on time.
+- Investigate unusually delayed deliveries.
+
+**Expected Business Impact:** Better logistics performance monitoring and more targeted operational improvements.
+
+---
+
+## Q12. Customer Satisfaction by State
+
+### Key Findings
+
+| State | Average Review Score |
+|---|---:|
+| Amapá (AP) | 4.1940 |
+| Amazonas (AM) | 4.1837 |
+| Paraná (PR) | 4.1800 |
+| São Paulo (SP) | 4.1740 |
+| Minas Gerais (MG) | 4.1362 |
+| Roraima (RR) | 3.6087 |
+
+### Business Insight
+
+Average customer review scores vary across Brazilian states.
+
+Amapá records the highest average among the reported results, while Roraima records the lowest.
+
+This suggests regional differences in customer experience.
+
+However, review scores reflect multiple aspects of purchasing, including product quality and service experience.
+
+The results do not prove that delivery performance caused these differences.
+
+### Strategic Recommendations
+
+- Investigate lower-rated states using customer complaints and review comments.
+- Compare review scores with actual delivery performance.
+- Include review counts to assess the reliability of state-level averages.
+- Monitor regional customer satisfaction trends.
+- Investigate recurring delivery-related complaints with logistics partners.
+
+**Expected Business Impact:** Improved understanding of regional customer experience and more targeted service improvements.
+
+---
+
+# 7. Demand Forecasting & Seasonality
+
+## Q14. Highest-Order-Volume Month
+
+### Key Findings
+
+| Rank | Month | Total Orders |
+|---|---|---:|
+| 1 | August | 10,843 |
+| 2 | May | 10,573 |
+| 3 | July | 10,318 |
+| 4 | March | 9,893 |
+| 5 | June | 9,412 |
+
+### Business Insight
+
+August recorded the highest order count in the month-level aggregation.
+
+May and July also recorded relatively high transaction volumes.
+
+This suggests that these months deserve further investigation for demand planning.
+
+However, the SQL query combines matching calendar months across years. Therefore, the result does not necessarily identify the highest-volume individual month-year period.
+
+### Strategic Recommendations
+
+- Analyze monthly demand separately by year.
+- Identify whether high-demand periods recur consistently.
+- Compare demand spikes with major promotional events.
+- Use validated seasonal patterns to plan inventory and warehouse staffing.
+- Monitor category-level demand during high-volume periods.
+
+**Expected Business Impact:** More informed forecasting and operational capacity planning.
+
+---
+
+# 8. Cross-Functional Business Insights
+
+The most valuable opportunities emerge when findings from different business functions are considered together.
+
+### Insight 1: São Paulo Is Central to Marketplace Activity
+
+São Paulo leads both seller-side fulfillment activity and customer purchasing activity.
+
+**Business Opportunity:** Compare supply-side and demand-side geography to determine whether fulfillment infrastructure is appropriately distributed.
+
+### Insight 2: Revenue Performance and Customer Satisfaction Should Be Connected
+
+The analysis identifies leading revenue categories and differences in category review scores.
+
+**Business Opportunity:** Combine revenue and satisfaction metrics to identify categories that are commercially important but may require quality improvements.
+
+### Insight 3: Customer Value Can Support Targeted Engagement
+
+The analysis identifies high-spending customers and 716 purchasing customers without recorded reviews.
+
+**Business Opportunity:** Develop separate engagement strategies for valuable repeat customers and customers who have not participated in review programs.
+
+### Insight 4: Delivery Efficiency May Be Related to Regional Satisfaction
+
+The median delivery duration is 10 days, while average review scores vary across states.
+
+**Business Opportunity:** Investigate whether delivery performance and customer satisfaction are associated at the regional level.
+
+This relationship requires further analysis and should not be assumed from the existing results.
+
+### Insight 5: Seller Performance Requires Multiple Metrics
+
+The analysis covers seller activity, historical fulfillment, and above-average seller performance.
+
+**Business Opportunity:** Develop a seller performance framework combining fulfilled-order volume, delivery reliability, customer satisfaction, and recent activity.
+
+---
+
+# 9. Strategic Business Recommendations
+
+| Priority | Department | Recommended Action | Potential Business Benefit |
+|---|---|---|---|
+| High | Logistics | Assess fulfillment capacity in São Paulo | Improved regional capacity planning |
+| High | Finance | Evaluate credit card provider costs | Potential transaction cost optimization |
+| High | Merchandising | Analyze leading revenue categories | Better promotional and inventory decisions |
+| High | Customer Experience | Investigate low-rated categories and states | Improved service-quality monitoring |
+| Medium | CRM | Segment high-value customers | More targeted customer retention |
+| Medium | Customer Engagement | Target 716 customers without recorded reviews | Improved review participation |
+| Medium | Seller Management | Monitor recent seller activity | Earlier identification of seller inactivity |
+| Medium | Catalogue Operations | Identify slow-moving products | Better catalogue management |
+| Medium | Marketing | Analyze orders per customer by state | More effective regional campaigns |
+| Medium | Demand Forecasting | Validate monthly demand patterns by year | Improved resource allocation |
+
+---
+
+# 10. Analytical Limitations
+
+The following limitations should be considered when interpreting the results.
+
+1. **Historical dataset:** Findings describe the supplied transactions rather than current marketplace performance.
+
+2. **Order-item versus order-level counts:** Some original SQL queries count joined order-item rows instead of distinct orders.
+
+3. **Payment metrics:** The payment analysis averages product-item prices and does not directly calculate average total order payment value.
+
+4. **Customer spending:** Product-price totals may differ from total customer payments when freight and other charges are included.
+
+5. **Review analysis:** Average review scores should be evaluated alongside review counts and possible duplicate contributions from multi-item orders.
+
+6. **Seller performance:** Historical fulfillment does not establish current seller activity.
+
+7. **Seasonality:** Aggregating calendar months across multiple years does not establish recurring seasonal patterns.
+
+8. **Causation:** Differences in delivery times, revenue, and customer satisfaction do not independently establish cause-and-effect relationships.
+
+9. **Missing numerical outputs:** The supplied SQL file establishes the methods used for cumulative revenue and above-average seller analysis, but does not contain their numerical result sets.
+
+These limitations identify opportunities for further analysis rather than invalidating the project.
+
+---
+
+# 11. Final Business Conclusion
+
+The Amazon Brazil E-Commerce SQL Analysis project demonstrates how transactional data can support business decision-making across multiple functions.
+
+The analysis highlights five major findings:
+
+**1. Regional concentration:** São Paulo plays a central role in seller-side fulfillment activity and customer purchasing demand.
+
+**2. Revenue performance:** Beauty & Health leads product revenue, while several other categories contribute substantial sales.
+
+**3. Payment behavior:** Credit cards dominate recorded payment activity, making payment processing an important area for financial analysis.
+
+**4. Operational performance:** The median delivery duration of 10 days provides a useful benchmark for evaluating logistics efficiency.
+
+**5. Customer engagement:** The identification of 716 customers without recorded reviews provides a defined audience for post-purchase engagement initiatives.
+
+Together, these findings demonstrate the value of SQL in transforming raw transactional records into business intelligence.
+
+The project also identifies opportunities for deeper analysis, including seller performance scoring, customer segmentation, regional logistics optimization, product profitability, and demand forecasting.
+
+### Final Project Takeaway
+
+**This project demonstrates the application of MySQL to solve 14 real-world e-commerce business questions, interpret transactional data, identify operational patterns, and develop evidence-based recommendations for business improvement.**
