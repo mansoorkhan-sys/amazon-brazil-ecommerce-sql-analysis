@@ -1,0 +1,23 @@
+ Analytical Limitations
+
+The following limitations should be considered when interpreting the results.
+
+Historical dataset: Findings describe the supplied transactions rather than current marketplace performance.
+
+Order-item versus order-level counts: Some original SQL queries count joined order-item rows instead of distinct orders.
+
+Payment metrics: The payment analysis averages product-item prices and does not directly calculate average total order payment value.
+
+Customer spending: Product-price totals may differ from total customer payments when freight and other charges are included.
+
+Review analysis: Average review scores should be evaluated alongside review counts and possible duplicate contributions from multi-item orders.
+
+Seller performance: Historical fulfillment does not establish current seller activity.
+
+Seasonality: Aggregating calendar months across multiple years does not establish recurring seasonal patterns.
+
+Causation: Differences in delivery times, revenue, and customer satisfaction do not independently establish cause-and-effect relationships.
+
+Missing numerical outputs: The supplied SQL file establishes the methods used for cumulative revenue and above-average seller analysis, but does not contain their numerical result sets.
+
+These limitations identify opportunities for further analysis rather than invalidating the project.
